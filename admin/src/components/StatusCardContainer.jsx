@@ -10,10 +10,9 @@ const statusData = [
 
 const StatusCardContainer = () => {
   return (
-    <div className="flex gap-6 flex-wrap p-8">
+    <div className="flex gap-6 flex-wrap">
       {statusData.map((data, index) => (
-        <StatusCard
-          key={index}
+        <StatusCard key={data.name}
           title={data.title}
           count={data.count}
           status={data.status}

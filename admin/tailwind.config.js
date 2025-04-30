@@ -17,6 +17,8 @@ export default {
       yellowLight: "#FEFCE8",
       green:"#4EAA52",
       red:"#ff0000",
+      lightGray:"#f2f2f2",
+      black:"#000000",
     },
   },
   plugins: [],
