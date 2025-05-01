@@ -1,24 +1,25 @@
-import React from 'react'
-import StatusCardContainer from './StatusCardContainer'
-import BarChartContainer from './BarChartContainer'
-import PieChartContainer from './PieChartContainer'
-import ComplaintListContainer from './ComplaintListContainer'
+import React from 'react';
+import StatusCardContainer from './StatusCardContainer';
+import BarChartContainer from './BarChartContainer';
+import PieChartContainer from './PieChartContainer';
+import ComplaintListContainer from './ComplaintListContainer';
 
 const MainContainer = () => {
-      return (
-         <div className='flex w-full h-screen'>
-           {/* left side container */}
-           <div className='w-[55%] flex flex-col p-6 gap-10'>
-             <StatusCardContainer />
-             <ComplaintListContainer/>
-           </div>
-           {/* right side container */}
-           <div className='w-[45%] flex flex-col gap-10 p-6'>
-           <PieChartContainer/>
-           <BarChartContainer/>
-           </div>
-         </div>
-       );
-}
+  return (
+    <div className='flex flex-col lg:flex-row w-full min-h-screen'>
+      {/* Left side container */}
+      <div className='w-full lg:w-[55%] flex flex-col p-4 md:p-6 gap-6'>
+        <StatusCardContainer />
+        <ComplaintListContainer />
+      </div>
 
-export default MainContainer
+      {/* Right side container */}
+      <div className='w-full lg:w-[45%] flex flex-col p-4 md:p-6 gap-6'>
+        <PieChartContainer />
+        <BarChartContainer />
+      </div>
+    </div>
+  );
+};
+
+export default MainContainer;

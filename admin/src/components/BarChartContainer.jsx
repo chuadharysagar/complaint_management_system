@@ -44,7 +44,7 @@ const BarChartContainer = () => {
   return (
     <div className="w-full h-[450px] bg-lightGray rounded-lg p-6 pt-3 flex flex-col gap-8 shadow-md">
       <div className='flex justify-between'>
-        <p className='font-bold text-lg'>Cotegory By Status</p>
+        <p className='font-bold text-lg'>Status By Category</p>
         <img src="/more.png" alt="more optionns" className='h-[20px] w-[20px] cursor-pointer' />
       </div>
       <ResponsiveContainer width="100%" height="100%">
@@ -57,8 +57,8 @@ const BarChartContainer = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="Pending" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
-          <Bar dataKey="Resolved" fill="#82ca9d" activeBar={<Rectangle fill="gold" stroke="purple" />} />
+          <Bar dataKey="Pending" fill="#FF8042" activeBar={<Rectangle fill="#FF8042" stroke="blue" />} />
+          <Bar dataKey="Resolved" fill="#4EAA52" activeBar={<Rectangle fill="#4EAA52" stroke="purple" />} />
         </BarChart>
       </ResponsiveContainer>
     </div>
