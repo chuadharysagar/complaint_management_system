@@ -8,7 +8,7 @@ const NavBar = () => {
     <div className='flex items-center justify-between bg-lightGray h-14 pl-10 pr-16 relative'>
       <div className= 'flex items-center gap-8'>
         <Link to="/" className='text-2xl font-bold'>HostelCare</Link>
-        <Link to="/users" className='hover:bg-purple p-1 rounded-md'>Manage Users</Link>
+        <Link to="/users" className='hover:text-green p-1 rounded-md'>Manage Users</Link>
       </div>
       {/* Profile + Arrow container */}
       <div className='relative flex items-center gap-2 cursor-pointer'>

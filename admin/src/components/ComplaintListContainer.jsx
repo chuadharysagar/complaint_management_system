@@ -50,7 +50,7 @@ const complaintData = [
 ];
 
 const ComplaintListContainer = () => {
-  const { selectedCategory, setSelectedCategory} = useAdminStore();
+  const { selectedCategory, setSelectedCategory } = useAdminStore();
 
   // Filter data based on selectedCategory
   const filteredComplaints = selectedCategory === "All"
@@ -58,7 +58,8 @@ const ComplaintListContainer = () => {
     : complaintData.filter((item) => item.category === selectedCategory);
 
   return (
-    <div className='flex flex-col shadow-md sm:justify-center'>
+    <div className='flex flex-col shadow-[0_-0px_5px_rgba(0,0,0,0.1)]
+ sm:justify-center p-1 rounded-md'>
       {/* Title + Search Bar */}
       <div className='flex justify-between items-center mb-4 flex-wrap gap-4'>
         <h3 className='text-lg font-semibold'>Recent Complaints</h3>
@@ -79,9 +80,8 @@ const ComplaintListContainer = () => {
             <p
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`pb-2 text-[15px] font-medium transition-all duration-200 whitespace-nowrap ${
-                selectedCategory === category ? 'border-b-2 text-green' : ''
-              } hover:text-green cursor-pointer`}
+              className={`pb-2 text-[15px] font-medium transition-all duration-200 whitespace-nowrap ${selectedCategory === category ? 'border-b-2 text-green' : ''
+                } hover:text-green cursor-pointer`}
             >
               {category}
             </p>
