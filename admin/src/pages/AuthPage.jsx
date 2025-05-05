@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router";
+import apiRequest from '../utils/apiRequest';
+import useAuthStore from '../utils/useAuthStore';
 
 const Authpage = () => {
+  const {setCurrentUser ,removeCurrentUser} = useAuthStore();
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -10,7 +13,14 @@ const Authpage = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
-    console.log(data);
+    
+    try {
+      const response = await apiRequest.post(`/user/auth/${isRegister?"register":"login"}`,data);
+      setCurrentUser(response.data);
+      navigate("/");
+    } catch (error) {
+      setError(error?.response?.data?.message || error.message || "Something went wrong");
+    }
   };
 
   return (
