@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import connectDB  from './utils/connectDB.js';
 import userRouter from './routes/user.route.js'
 import complaintRouter from './routes/complaint.route.js'
+import adminRouter from './routes/admin.route.js'
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get("/",(req,res)=>{
 
 app.use("/user",userRouter);
 app.use("/complaint",complaintRouter);
+app.use("/admin",adminRouter);
 
 app.listen(3000,()=>{
    connectDB();

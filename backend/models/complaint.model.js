@@ -8,7 +8,7 @@ const complaintSchema = new Schema({
    },
    category:{
       type:String,
-      enum:["hostel","mess","it","sports","academic","medical","other"],
+      enum:["all","hostel","mess","it","sports","academics","medical","others"],
       required:true,
    },
    status:{
