@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdminStore } from '../utils/useAdminStore';
+import { format } from 'timeago.js'
 
-const Complaint = ({ data }) => {
+const Complaint = ({ data, updateComplaintStatus }) => {
   const [openStatus, setOpenStatus] = useState(false);
   const [localStatus, setLocalStatus] = useState(data.status);
+
+  useEffect(() => {
+    setLocalStatus(data.status);
+  }, [data.status]);
 
   // Optional: Also update in global store
   const { setCurrentStatus } = useAdminStore();
 
-  const handleStatusChange = (newStatus) => {
+  const handleStatusChange = async (newStatus) => {
+    if (newStatus === localStatus) return;
     setLocalStatus(newStatus);
-    setCurrentStatus(newStatus); // Optional, in case you want to use it globally
+    setCurrentStatus(newStatus);
     setOpenStatus(false);
+
+    await updateComplaintStatus(newStatus.toLowerCase(), data._id);
   };
 
   // Status styling
   const getStatusStyle = (status) => {
     switch (status) {
-      case 'New':
+      case 'pending':
         return { color: '#ff0000', bg: '#ffd6cc' };
-      case 'InProgress':
+      case 'inprogress':
         return { color: '#996600', bg: '#ffffcc' };
-      case 'Resolved':
+      case 'resolved':
         return { color: '#009900', bg: '#b3ffb3' };
       default:
         return { color: '#333', bg: '#eee' };
@@ -33,12 +41,12 @@ const Complaint = ({ data }) => {
   // Category styling
   const getCategoryStyle = (category) => {
     const styles = {
-      Academics: { color: '#009900', bg: '#b3ffb3' },
-      Mess: { color: '#996600', bg: '#ffffcc' },
-      Hostel: { color: '#9900ff', bg: '#ddccff' },
-      IT: { color: '#e68a00', bg: '#ffe0b3' },
-      Sports: { color: '#0099cc', bg: '#ccf5ff' },
-      Medical: { color: '#9900ff', bg: '#ddccff' },
+      academics: { color: '#009900', bg: '#b3ffb3' },
+      mess: { color: '#996600', bg: '#ffffcc' },
+      hostel: { color: '#9900ff', bg: '#ddccff' },
+      it: { color: '#e68a00', bg: '#ffe0b3' },
+      sports: { color: '#0099cc', bg: '#ccf5ff' },
+      medical: { color: '#9900ff', bg: '#ddccff' },
     };
     return styles[category] || { color: '#333', bg: '#eee' };
   };
@@ -48,11 +56,11 @@ const Complaint = ({ data }) => {
   return (
     <div className='flex flex-col gap-2 border-b-2 hover:bg-lightGray p-4 rounded-lg shadow-sm'>
       <div className='flex justify-end gap-2'>
-        <p className='text-sm bg-purpleLight p-1 rounded-md'>{data.user}</p>
-        <p className='text-sm bg-purpleLight p-1 rounded-md'>{data.date}</p>
+        <p className='text-sm bg-purpleLight p-1 rounded-md hidden sm:block'>{data.createdBy.displayName}</p>
+        <p className='text-sm bg-purpleLight p-1 rounded-md'>{format(data.createdAt)}</p>
       </div>
       <p>{data.description}</p>
-
+  
       <div className='flex justify-between items-start relative'>
         <p
           className='text-sm p-1 rounded-lg bg-gray-200 pl-2 pr-2 font-medium'
@@ -61,9 +69,9 @@ const Complaint = ({ data }) => {
             color: categoryColor,
           }}
         >
-          {data.category}
+          {data.category.charAt(0).toUpperCase() + data.category.slice(1)}
         </p>
-
+  
         {/* Status Button */}
         <div className='relative'>
           <p
@@ -74,18 +82,18 @@ const Complaint = ({ data }) => {
             }}
             onClick={() => setOpenStatus((prev) => !prev)}
           >
-            {localStatus}
+            {localStatus.charAt(0).toUpperCase() + localStatus.slice(1)}
           </p>
-
+  
           {openStatus && (
             <div className='absolute right-0 mt-1 bg-lightGray shadow-lg rounded-md z-10'>
-              {["InProgress", "Resolved"].map((option) => (
+              {["inprogress", "resolved"].map((option) => (
                 <p
                   key={option}
                   onClick={() => handleStatusChange(option)}
                   className='px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer'
                 >
-                  {option}
+                  {option.charAt(0).toUpperCase() + option.slice(1)}
                 </p>
               ))}
             </div>

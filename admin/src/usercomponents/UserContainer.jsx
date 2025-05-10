@@ -1,21 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Send, X, Check, Clock, AlertCircle, Trash2 } from 'lucide-react';
 import UserComplaintList from './UserComplaintList';
 import NavBar from '../components/NavBar';
+import apiRequest from '../utils/apiRequest';
+
 
 const UserContainer = () => {
    // Sample categories
-   const categories = ["Hostel", "IT", "Mess", "Academic", "Transportation", "Sports", "Other"];
+   const categories = ["Hostel", "IT", "Mess", "Academics", "Sports","Medical","Others"];
 
-   // Sample initial complaints for demonstration
-   const [complaints, setComplaints] = useState([
-      { id: 1, text: "WiFi not working in Block C", category: "IT", status: "resolved", date: "2025-05-01" },
-      { id: 2, text: "Hot water not available in Room 204", category: "Hostel", status: "pending", date: "2025-05-02" },
-      { id: 3, text: "Need vegetarian options in lunch", category: "Mess", status: "in-progress", date: "2025-05-03" },
-      { id: 4, text: "WiFi not working in Block C", category: "IT", status: "resolved", date: "2025-05-01" },
-      { id: 5, text: "Hot water not available in Room 204", category: "Hostel", status: "pending", date: "2025-05-02" },
-      { id: 6, text: "Need vegetarian options in lunch", category: "Mess", status: "in-progress", date: "2025-05-03" },
-   ]);
+   const [complaints, setComplaints] = useState("");
 
    const [complaintText, setComplaintText] = useState("");
    const [selectedCategory, setSelectedCategory] = useState("");
@@ -24,40 +18,68 @@ const UserContainer = () => {
    // Status badge mapper
    const statusBadge = {
       "pending": { color: "bg-[#ffd6cc] text-[#ff0000]", icon: <Clock size={14} className="inline mr-1" /> },
-      "in-progress": { color: "bg-[#ffffcc] text-[#996600]", icon: <AlertCircle size={14} className="inline mr-1" /> },
+      "inprogress": { color: "bg-[#ffffcc] text-[#996600]", icon: <AlertCircle size={14} className="inline mr-1" /> },
       "resolved": { color: "bg-[#b3ffb3] text-[#009900]", icon: <Check size={14} className="inline mr-1" /> },
-      "delete":{color:"bg-[#ff6666]",icon:<Trash2 size={14} className ="inline mr-1"/>}
+      "delete": { color: "bg-[#ff6666]", icon: <Trash2 size={14} className="inline mr-1" /> }
    };
 
-   const handleSubmit = () => {
+   const fetchComplaints = async () => {
+      try {
+         const res = await apiRequest.get("/complaint/get");
+         setComplaints(res.data);
+      } catch (error) {
+         console.log("Failed to fetch complaints", error);
+      }
+   }
+
+   useEffect(() => {
+      fetchComplaints();
+   }, [])
+
+   const handleSubmit = async () => {
       if (!complaintText.trim()) {
          setError("Please enter your complaint");
          return;
       }
-
       if (!selectedCategory) {
          setError("Please select a category");
          return;
       }
-
       // Clear any previous errors
       setError("");
 
       // Add new complaint
       const newComplaint = {
-         id: complaints.length + 1,
-         text: complaintText,
-         category: selectedCategory,
-         status: "pending",
-         date: new Date().toISOString().split('T')[0]
+         description: complaintText,
+         category: selectedCategory.toLowerCase(),
       };
+      try {
+         const res = await apiRequest.post("/complaint/create", newComplaint);
 
-      setComplaints([newComplaint, ...complaints]);
-
-      // Reset form
-      setComplaintText("");
-      setSelectedCategory("");
+         fetchComplaints();
+         setComplaintText("");
+         setSelectedCategory("");
+      } catch (error) {
+         console.error("Error submittig complaint:", error);
+         setError("Failed to submit complaint. Try again later");
+      }
    };
+
+
+  // Handle complaint delete 
+   const hadelDeleteClick = async(complaintId)=>{
+       try {
+         const res = await apiRequest.delete(`/complaint/delete/${complaintId}`,{
+           withCredentials:true
+         });
+          
+         fetchComplaints();
+         
+       } catch (error) {
+         console.log("Error deleting complaint",error);
+       }
+     }
+   
 
    return (
       <>
@@ -77,7 +99,7 @@ const UserContainer = () => {
 
                   <button
                      onClick={handleSubmit}
-                     className="absolute right-3 bottom-3 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
+                     className="absolute right-3 bottom-3 bg-blue-600 text-white p-2 rounded-full hover:bg-green transition-colors"
                   >
                      <Send size={18} />
                   </button>
@@ -92,8 +114,8 @@ const UserContainer = () => {
                            key={category}
                            onClick={() => setSelectedCategory(category)}
                            className={`px-3 py-1.5 text-sm rounded-full transition-colors ${selectedCategory === category
-                                 ? "bg-green text-black"
-                                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                              ? "bg-green text-black"
+                              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                               }`}
                         >
                            {category}
@@ -104,7 +126,7 @@ const UserContainer = () => {
 
                {/* Error message */}
                {error && (
-                  <div className="mt-3 text-red-500 text-sm flex items-center">
+                  <div className="mt-3 text-red text-sm flex items-center">
                      <AlertCircle size={16} className="mr-1" />
                      {error}
                   </div>
@@ -112,7 +134,7 @@ const UserContainer = () => {
             </div>
 
             {/* Complaints List */}
-            <UserComplaintList complaints={complaints} statusBadge={statusBadge} />
+            <UserComplaintList complaints={complaints} statusBadge={statusBadge} hadelDeleteClick={hadelDeleteClick} />
          </div>
       </>
    );

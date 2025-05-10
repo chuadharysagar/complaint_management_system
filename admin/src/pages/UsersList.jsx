@@ -1,71 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import UserItemTable from '../components/UserItemTable'
+import apiRequest from '../utils/apiRequest';
 
-const userData = [
-  {
-    username: "exmaple 1",
-    email: "exmaple1@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 2",
-    email: "exmaple2@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 3",
-    email: "exmaple3@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 1",
-    email: "exmaple1@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 2",
-    email: "exmaple2@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 3",
-    email: "exmaple3@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 1",
-    email: "exmaple1@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 2",
-    email: "exmaple2@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 3",
-    email: "exmaple3@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 1",
-    email: "exmaple1@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 2",
-    email: "exmaple2@mail.com",
-    updatedAt: "04/05/20025",
-  },
-  {
-    username: "exmaple 3",
-    email: "exmaple3@mail.com",
-    updatedAt: "04/05/20025",
-  }
-]
 const UsersList = () => {
+  const [userData ,setUserData] = useState([]);
 
+  const fetchUserData= async()=>{
+    try {
+      const res = await apiRequest.get("/admin/users",{
+        withCredentials:true,
+      });
 
+     console.log(res.data);
+     setUserData(res.data);
+    } catch (error) {
+     console.log("failed to fetch user details",error); 
+    }
+  }
+ 
+  useEffect(()=>{
+    fetchUserData();
+  },[])
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16'>

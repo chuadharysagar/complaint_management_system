@@ -1,17 +1,18 @@
 import React from 'react'
+import {format} from 'timeago.js'
+import apiRequest from '../utils/apiRequest';
 
-const UserComplaintList = ({ complaints, statusBadge }) => {
+const UserComplaintList = ({ complaints, statusBadge ,hadelDeleteClick}) => {
   // Category styling
   const getCategoryStyle = (category) => {
     const styles = {
-      Academic: { color: '#009900', bg: '#b3ffb3' },
-      Mess: { color: '#996600', bg: '#ffffcc' },
-      Hostel: { color: '#9900ff', bg: '#ddccff' },
-      IT: { color: '#e68a00', bg: '#ffe0b3' },
-      Sports: { color: '#0099cc', bg: '#ccf5ff' },
-      Transportation: { color: '#cc0000', bg: '#ffcccc' },
-      Medical: { color: '#9900ff', bg: '#ddccff' },
-      Other: { color: '#333333', bg: '#e6e6e6' }
+      academics: { color: '#009900', bg: '#b3ffb3' },
+      mess: { color: '#996600', bg: '#ffffcc' },
+      hostel: { color: '#9900ff', bg: '#ddccff' },
+      it: { color: '#e68a00', bg: '#ffe0b3' },
+      sports: { color: '#0099cc', bg: '#ccf5ff' },
+      medical: { color: '#9900ff', bg: '#ddccff' },
+      other: { color: '#333333', bg: '#e6e6e6' }
     };
     return styles[category] || { color: '#333333', bg: '#eeeeee' };
   };
@@ -30,7 +31,7 @@ const UserComplaintList = ({ complaints, statusBadge }) => {
             const { color: categoryColor, bg: categoryBgColor } = getCategoryStyle(complaint.category);
 
             return (
-              <div key={complaint.id} className="border rounded-lg p-4 bg-white shadow-sm">
+              <div key={complaint._id} className="border rounded-lg p-4 bg-white shadow-sm">
                 <div className="flex justify-between items-start mb-2">
                   <span
                     className="inline-block px-3 py-1 text-xs font-medium rounded-full"
@@ -39,7 +40,7 @@ const UserComplaintList = ({ complaints, statusBadge }) => {
                       color: categoryColor,
                     }}
                   >
-                    {complaint.category}
+                    {complaint.category.charAt(0).toUpperCase()+complaint.category.slice(1)}
                   </span>
 
                   <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusBadge[complaint.status].color}`}>
@@ -48,13 +49,15 @@ const UserComplaintList = ({ complaints, statusBadge }) => {
                   </span>
                 </div>
 
-                <p className="text-gray-800 mb-2">{complaint.text}</p>
+                <p className="text-gray-800 mb-2">{complaint.description}</p>
 
                  <div className='flex justify-between'>
                  <div className="text-xs .text-gray-500">
-                  Submitted on {complaint.date}
+                  Submitted {format(complaint.createdAt)}
                 </div>
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer ${statusBadge["delete"].color}`}>
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium cursor-pointer ${statusBadge["delete"].color}`}
+                onClick={()=>hadelDeleteClick(complaint._id)}
+                >
                     {statusBadge["delete"].icon}
                     Delete
                   </span>

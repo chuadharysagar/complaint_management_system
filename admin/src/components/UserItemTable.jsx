@@ -1,6 +1,8 @@
 import React from 'react'
 
 const UserItemTable = ({username , email , updatedAt}) => {
+   const updatedDate = new Intl.DateTimeFormat('en-GB').format(new Date(updatedAt));
+
    return (
       <tr className='bg-white border-b'>
          <th scope='row' className='items-center gap-3 hidden sm:flex px-6 py-4 font font-medium text-gray-900 whitespace-nowrap'>
@@ -13,7 +15,7 @@ const UserItemTable = ({username , email , updatedAt}) => {
          </td>
 
          <td className='px-6 py-4'>
-            {updatedAt}
+            {updatedDate}
          </td>
 
          <td className='px-6 py-4 cursor-pointer'>
