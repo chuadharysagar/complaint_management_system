@@ -6,4 +6,16 @@ const apiRequest = axios.create({
 })
 
 
+apiRequest.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      // Redirect to login page
+      window.location.href = "/auth";
+    }
+    return Promise.reject(error);
+  }
+);
+
+
 export default apiRequest;

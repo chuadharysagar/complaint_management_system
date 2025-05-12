@@ -1,6 +1,8 @@
 import React from 'react'
+import { Trash2 } from 'lucide-react';
 
-const UserItemTable = ({username , email , updatedAt}) => {
+
+const UserItemTable = ({username , email , updatedAt , handleDeleteClick , userId,role}) => {
    const updatedDate = new Intl.DateTimeFormat('en-GB').format(new Date(updatedAt));
 
    return (
@@ -13,13 +15,17 @@ const UserItemTable = ({username , email , updatedAt}) => {
          <td className='px-6 py-4'>
             {email}
          </td>
-
+          <td className='px-6 py-4'>
+            {role}
+         </td>
          <td className='px-6 py-4'>
             {updatedDate}
          </td>
 
          <td className='px-6 py-4 cursor-pointer'>
-            X
+         <Trash2 size={20}
+         onClick={()=>handleDeleteClick(userId)}
+         />
          </td>
 
       </tr>

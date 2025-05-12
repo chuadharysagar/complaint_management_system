@@ -3,6 +3,7 @@ import { Send, X, Check, Clock, AlertCircle, Trash2 } from 'lucide-react';
 import UserComplaintList from './UserComplaintList';
 import NavBar from '../components/NavBar';
 import apiRequest from '../utils/apiRequest';
+import { toast } from 'react-toastify';
 
 
 const UserContainer = () => {
@@ -59,9 +60,11 @@ const UserContainer = () => {
          fetchComplaints();
          setComplaintText("");
          setSelectedCategory("");
+         toast.success(res.data.message);
       } catch (error) {
          console.error("Error submittig complaint:", error);
          setError("Failed to submit complaint. Try again later");
+         toast.error("Failed to submit complaint.");
       }
    };
 
@@ -74,9 +77,10 @@ const UserContainer = () => {
          });
           
          fetchComplaints();
-         
+         toast.success(res.data.message);
        } catch (error) {
          console.log("Error deleting complaint",error);
+         toast.error(error);
        }
      }
    

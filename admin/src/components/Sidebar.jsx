@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
-  const [selected, setSeleted] = useState("userlist");
+  const [selected, setSeleted] = useState("");
 
   return (
     <div className='flex flex-col bg-purpleLight'>

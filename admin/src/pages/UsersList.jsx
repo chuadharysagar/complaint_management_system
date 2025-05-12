@@ -1,26 +1,39 @@
 import React, { useEffect, useState } from 'react'
 import UserItemTable from '../components/UserItemTable'
 import apiRequest from '../utils/apiRequest';
+import {toast} from 'react-toastify'
 
 const UsersList = () => {
-  const [userData ,setUserData] = useState([]);
+  const [userData, setUserData] = useState([]);
 
-  const fetchUserData= async()=>{
+  const fetchUserData = async () => {
     try {
-      const res = await apiRequest.get("/admin/users",{
-        withCredentials:true,
+      const res = await apiRequest.get("/admin/users", {
+        withCredentials: true,
       });
-
-     console.log(res.data);
-     setUserData(res.data);
+      setUserData(res.data);
     } catch (error) {
-     console.log("failed to fetch user details",error); 
+      console.log("failed to fetch user details", error);
     }
   }
- 
-  useEffect(()=>{
+
+  useEffect(() => {
     fetchUserData();
-  },[])
+  }, [])
+
+
+  const handleDeleteClick = async (userId) => {
+    try {
+
+      const res = await apiRequest.delete(`/admin/delete/${userId}`,{
+        withCredentials:true,
+      });
+      fetchUserData();
+      toast.success(res.data.message);
+    } catch (error) {
+      console.log("Error deleting user", error);
+    }
+  }
 
   return (
     <div className='flex-1 pt-5 px-5 sm:pt-12 sm:pl-16'>
@@ -35,6 +48,9 @@ const UsersList = () => {
               <th scope='col' className='px-6 py-3'>
                 Email
               </th>
+              <th scope='col' className='px-6 py-3'>
+                Role
+              </th>
               <th scope='col' className=' px-6 py-3'>
                 Updated At
               </th>
@@ -46,7 +62,14 @@ const UsersList = () => {
 
           <tbody>
             {userData.map((user, index) => {
-              return <UserItemTable key={index} username ={user.username} email={user.email} updatedAt={user.updatedAt}/>
+              return <UserItemTable key={index}
+                username={user.displayName}
+                email={user.email}
+                updatedAt={user.updatedAt}
+                handleDeleteClick={handleDeleteClick}
+                userId={user._id}
+                role = {user.role}
+              />
             })}
           </tbody>
         </table>

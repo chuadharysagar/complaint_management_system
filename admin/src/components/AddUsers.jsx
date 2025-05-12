@@ -1,16 +1,37 @@
 import React, { useState } from 'react';
+import apiRequest from '../utils/apiRequest';
+import { toast } from 'react-toastify';
+import { useRef } from 'react';
 
 const AddUsers = () => {
   const [error, setError] = useState("");
-  const handleCreate = async(e)=>{
-   e.preventDefault();
-   const formData = new FormData(e.target);
-   const data = Object.fromEntries(formData);
-   console.log(data);
-  } 
+  const formRef = useRef();
+ 
+  const handleCreate =async(e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+     try {
+      const res = await apiRequest.post("/user/auth/register",data);
+      formRef.current.reset();
+      toast.success(res.data.message);
+     } catch (error) {
+      toast.error("Error creatig a user");
+      console.log("Error creatig a user",error);
+     }
+  }
 
-   return (
-    <form key="createuser" onSubmit={handleCreate} className="max-w-md flex flex-col gap-4 p-8">
+  return (
+    <form key="createuser" ref={formRef} onSubmit={handleCreate} className="max-w-md flex flex-col gap-4 p-8">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="displayName" className="text-sm">Name</label>
+        <input
+          type="text"
+          required name="displayName"
+          id="displayName"
+          placeholder="Name"
+          className="p-4 border-2 border-gray-300 rounded-[16px]" />
+      </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="email" className="text-md">Email</label>
         <input

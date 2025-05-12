@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAdminStore } from '../utils/useAdminStore';
 import { format } from 'timeago.js'
+import { Trash2 } from 'lucide-react'
 
-const Complaint = ({ data, updateComplaintStatus }) => {
+const Complaint = ({ data, updateComplaintStatus, handleDeleteClick }) => {
   const [openStatus, setOpenStatus] = useState(false);
   const [localStatus, setLocalStatus] = useState(data.status);
 
@@ -55,23 +56,30 @@ const Complaint = ({ data, updateComplaintStatus }) => {
 
   return (
     <div className='flex flex-col gap-2 border-b-2 hover:bg-lightGray p-4 rounded-lg shadow-sm'>
-      <div className='flex justify-end gap-2'>
-        <p className='text-sm bg-purpleLight p-1 rounded-md hidden sm:block'>{data.createdBy.displayName}</p>
+      <div className='flex gap-2 justify-end'>
+        <p className='text-sm bg-purpleLight p-1 rounded-md hidden sm:block'>{data.createdBy?.displayName || " "}</p>
         <p className='text-sm bg-purpleLight p-1 rounded-md'>{format(data.createdAt)}</p>
       </div>
       <p>{data.description}</p>
-  
+
       <div className='flex justify-between items-start relative'>
-        <p
-          className='text-sm p-1 rounded-lg bg-gray-200 pl-2 pr-2 font-medium'
-          style={{
-            backgroundColor: categoryBgColor,
-            color: categoryColor,
-          }}
-        >
-          {data.category.charAt(0).toUpperCase() + data.category.slice(1)}
-        </p>
-  
+        <div className='flex gap-4'>
+          <p
+            className='text-sm p-1 rounded-lg bg-gray-200 pl-2 pr-2 font-medium'
+            style={{
+              backgroundColor: categoryBgColor,
+              color: categoryColor,
+            }}
+          >
+            {data.category.charAt(0).toUpperCase() + data.category.slice(1)}
+          </p>
+          <span className='inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-medium bg-[#ffd6cc]  cursor-pointer'
+          onClick={()=>handleDeleteClick(data._id)}
+          >
+            <Trash2 size={16} className='text-red' /> Delete</span>
+        </div>
+
+
         {/* Status Button */}
         <div className='relative'>
           <p
@@ -84,7 +92,7 @@ const Complaint = ({ data, updateComplaintStatus }) => {
           >
             {localStatus.charAt(0).toUpperCase() + localStatus.slice(1)}
           </p>
-  
+
           {openStatus && (
             <div className='absolute right-0 mt-1 bg-lightGray shadow-lg rounded-md z-10'>
               {["inprogress", "resolved"].map((option) => (
