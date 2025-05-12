@@ -169,12 +169,40 @@ export const getMonthlyComplaintStats = async (req, res) => {
 
 
 //GET ALL THE USER DATA FOR ADMIN
-export const getAllUsers = async(req,res)=>{
+export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
     res.status(200).json(users);
   } catch (error) {
-    return res.status(500).json({meassge:"Failed to fetch usser data"});
+    return res.status(500).json({ meassge: "Failed to fetch usser data" });
+  }
+}
+
+
+//DELETE A USER
+export const deleteUser = async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User does not exits" });
+    }
+    res.status(200).json({ message: "User deleted Sucessfully" });
+  } catch (error) {
+    return res.status(401).json({ message: "Error deleting message" });
+  }
+}
+
+// Delete a complaint
+export const deleteComplaint = async(req,res)=>{
+  const complaintId = req.params.complaintId;
+  try {
+     const complaint = await Complaint.findOneAndDelete({_id:complaintId});
+
+     res.status(200).json({message:"Complaint Deleted Sucessfully"});
+  } catch (error) {
+    return res.status(501).json({message:"Error Deleting Comaplaint"});
   }
 }
 

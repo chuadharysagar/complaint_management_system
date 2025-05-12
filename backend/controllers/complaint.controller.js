@@ -17,7 +17,7 @@ export const createComplaint = async (req, res) => {
          updatedBy: req.userId,
       });
 
-      res.status(201).json(complaint);
+      res.status(201).json({complaint,message:"Complaint Submitted"});
    } catch (error) {
       res.status(500).json({ message: "Failed to create complaint server error" });
    }

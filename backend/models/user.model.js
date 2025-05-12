@@ -6,7 +6,6 @@ const userSchema = new Schema({
    displayName:{
       type:String,
       required:true,
-
    },
    email:{
       type:String,

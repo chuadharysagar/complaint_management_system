@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 
 export const registerUser = async (req, res) => {
-   const { displayName, email, password } = req.body;
+   const { displayName, email, password, role } = req.body;
 
    if (!displayName || !email || !password) {
       return res.status(400).json({ message: "All feilds are required" });
@@ -12,7 +12,7 @@ export const registerUser = async (req, res) => {
 
    const existingUser = await User.findOne({ email });
    if (existingUser) {
-      return res.status(409).json({ meassge: "User Already exists" });
+      return res.status(409).json({ message: "User Already exists" });
    }
 
    const newHashedPassword = await bycrpt.hash(password, 10);
@@ -22,6 +22,7 @@ export const registerUser = async (req, res) => {
       email,
       password,
       hashedPassword: newHashedPassword,
+      role: role || "user",
    })
 
    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
@@ -29,12 +30,14 @@ export const registerUser = async (req, res) => {
    res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 30 * 24 * 60 * 100,
-   })
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      sameSite: "lax",
+   });
+
 
    const { hashedPassword, ...deatilWithoutPassword } = user.toObject();
 
-   return res.status(200).json(deatilWithoutPassword);
+   return res.status(200).json({deatilWithoutPassword,message:"User Created Sucessfully"});
 }
 
 
@@ -60,8 +63,10 @@ export const loginUser = async (req, res) => {
    res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 30 * 24 * 60 * 100,
-   })
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      sameSite: "lax", // SameSite should be set to 'lax' or 'strict' for better security
+   });
+
    const { hashedPassword, ...deatilWithoutPassword } = user.toObject();
 
    return res.status(200).json(deatilWithoutPassword);
